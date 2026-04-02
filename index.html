@@ -441,18 +441,26 @@ function initMap(){
 }
 
 function getGPS(){
-  if(!navigator.geolocation){alert('GPSが使用できません');return}
+  if(!navigator.geolocation){alert('このブラウザはGPSに対応していません');return}
   const btn=document.getElementById('gps-btn');
-  btn.textContent='取得中...';
+  btn.innerHTML='<span style="font-size:16px">⏳</span> 取得中...';
+  btn.disabled=true;
   navigator.geolocation.getCurrentPosition(pos=>{
     fromLatLng=new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
+    document.getElementById('from-input').value='';
     geocoder.geocode({location:fromLatLng,language:'ja'},(results,status)=>{
       const el=document.getElementById('from-resolved');
       el.textContent='✓ '+(status==='OK'&&results[0]?results[0].formatted_address.replace('日本、',''):'現在地を取得しました');
       el.className='resolved';
-      btn.innerHTML='<span style="font-size:16px">📍</span> GPSで現在地を取得';
+      btn.innerHTML='<span style="font-size:16px">📍</span> 現在地を再取得';
+      btn.disabled=false;
     });
-  },()=>{alert('位置情報の取得に失敗しました');btn.innerHTML='<span style="font-size:16px">📍</span> GPSで現在地を取得'});
+  },err=>{
+    const msgs={1:'位置情報の使用が許可されていません。ブラウザ設定を確認してください。',2:'位置情報を取得できませんでした。再度お試しください。',3:'タイムアウトしました。再度お試しください。'};
+    alert(msgs[err.code]||'位置情報の取得に失敗しました');
+    btn.innerHTML='<span style="font-size:16px">📍</span> GPSで現在地を取得';
+    btn.disabled=false;
+  },{enableHighAccuracy:true,timeout:10000,maximumAge:0});
 }
 
 function resolveFrom(){
@@ -598,10 +606,8 @@ async function search(){
       const walkRoute=await getWalkingRoute(fromLatLng,closest.geometry.location);
 
       // 札幌地下鉄の場合は乗り換え考慮運賃を計算
-      const boardNearest=closest.subwayId?closest:findNearestSubwayStation(closest.geometry.location, closest.name);
-      const alightNearest=ds.subwayId?ds:findNearestSubwayStation(ds.geometry.location, ds.name);
-      const boardId=closest.subwayId||boardNearest?.id;
-      const alightId=ds.subwayId||alightNearest?.id;
+      const boardId=closest.subwayId;
+      const alightId=ds.subwayId;
       let subwayInfo=null;
       if(boardId&&alightId&&boardId!==alightId){
         subwayInfo=calcSubwayRoute(boardId,alightId);
@@ -652,10 +658,8 @@ async function search(){
         const taxiToSt=await getDrivingRoute(fromLatLng,closestFrom.geometry.location);
         if(taxiToSt){
           const taxiCostToSt=txCost(taxiToSt.distKm);
-          const boardNearest=closestFrom.subwayId?closestFrom:findNearestSubwayStation(closestFrom.geometry.location, closestFrom.name);
-          const alightNearest=ds.subwayId?ds:findNearestSubwayStation(ds.geometry.location, ds.name);
-          const boardId2=closestFrom.subwayId||boardNearest?.id;
-          const alightId2=ds.subwayId||alightNearest?.id;
+          const boardId2=closestFrom.subwayId;
+          const alightId2=ds.subwayId;
           let subwayInfo=null;
           if(boardId2&&alightId2&&boardId2!==alightId2){
             subwayInfo=calcSubwayRoute(boardId2,alightId2);
