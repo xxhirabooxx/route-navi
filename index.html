@@ -176,7 +176,7 @@ header p{font-size:11px;color:rgba(255,255,255,0.8);margin-top:2px}
 </div>
 
 <script>
-const APIKEY='AIzaSyBgF7d_zuAMKnxtEKUAFU89URmUV_1wJTQ';
+const APIKEY='AIzaSyDCRwGUKB3-lWIVf1EI4u-ANijHJ0ZW5EQ';
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 札幌地下鉄 全駅データ（路線・駅番号付き）
@@ -441,27 +441,18 @@ function initMap(){
 }
 
 function getGPS(){
-  if(!navigator.geolocation){alert('このブラウザはGPSに対応していません');return}
+  if(!navigator.geolocation){alert('GPSが使用できません');return}
   const btn=document.getElementById('gps-btn');
-  btn.innerHTML='<span style="font-size:16px">⏳</span> 取得中...';
-  btn.disabled=true;
-  const options={enableHighAccuracy:true,timeout:10000,maximumAge:0};
+  btn.textContent='取得中...';
   navigator.geolocation.getCurrentPosition(pos=>{
     fromLatLng=new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
-    document.getElementById('from-input').value='';
     geocoder.geocode({location:fromLatLng,language:'ja'},(results,status)=>{
       const el=document.getElementById('from-resolved');
       el.textContent='✓ '+(status==='OK'&&results[0]?results[0].formatted_address.replace('日本、',''):'現在地を取得しました');
       el.className='resolved';
-      btn.innerHTML='<span style="font-size:16px">📍</span> 現在地を再取得';
-      btn.disabled=false;
+      btn.innerHTML='<span style="font-size:16px">📍</span> GPSで現在地を取得';
     });
-  },err=>{
-    const msgs={1:'位置情報の使用が許可されていません。ブラウザ設定を確認してください。',2:'位置情報を取得できませんでした。再度お試しください。',3:'タイムアウトしました。電波状況を確認して再度お試しください。'};
-    alert(msgs[err.code]||'位置情報の取得に失敗しました');
-    btn.innerHTML='<span style="font-size:16px">📍</span> GPSで現在地を取得';
-    btn.disabled=false;
-  },options);
+  },()=>{alert('位置情報の取得に失敗しました');btn.innerHTML='<span style="font-size:16px">📍</span> GPSで現在地を取得'});
 }
 
 function resolveFrom(){
@@ -520,18 +511,17 @@ function saveModal(){
 
 function getDist(a,b){return google.maps.geometry.spherical.computeDistanceBetween(a,b)}
 
-function getNearbyTransit(latLng,radius){
-  return new Promise(resolve=>{
-    placesService.nearbySearch({location:latLng,radius,type:'subway_station'},(r1,s1)=>{
-      if(s1===google.maps.places.PlacesServiceStatus.OK&&r1.length>0){resolve(r1.map(r=>({...r,tType:'subway'})));return}
-      placesService.nearbySearch({location:latLng,radius,type:'train_station'},(r2,s2)=>{
-        if(s2===google.maps.places.PlacesServiceStatus.OK&&r2.length>0){resolve(r2.map(r=>({...r,tType:'train'})));return}
-        placesService.nearbySearch({location:latLng,radius,type:'bus_station'},(r3,s3)=>{
-          resolve(s3===google.maps.places.PlacesServiceStatus.OK?r3.map(r=>({...r,tType:'bus'})):[]);
-        });
-      });
-    });
+function getNearbyStationsFromData(latLng,radius){
+  const results=[];
+  ALL_STATIONS.forEach(s=>{
+    const stLatLng=new google.maps.LatLng(s.lat,s.lng);
+    const dist=google.maps.geometry.spherical.computeDistanceBetween(latLng,stLatLng);
+    if(dist<=radius){
+      results.push({name:s.name,tType:'subway',dist,geometry:{location:stLatLng},subwayId:s.id,line:s.line});
+    }
   });
+  results.sort((a,b)=>a.dist-b.dist);
+  return results;
 }
 
 function getDrivingRoute(origin,dest){
@@ -562,9 +552,9 @@ async function search(){
   btn.disabled=true;btn.textContent='検索中...';
   document.getElementById('results').style.display='none';
 
-  // 目的地周辺の交通機関を検索
-  const destTransit=await getNearbyTransit(toLatLng,3000);
-  const fromTransit=await getNearbyTransit(fromLatLng,Math.max(walkLimit,3000));
+  // 組み込み駅データから周辺駅を取得（Places API不要）
+  const destTransit=getNearbyStationsFromData(toLatLng,3000);
+  const fromTransit=getNearbyStationsFromData(fromLatLng,Math.max(walkLimit,3000));
 
   routes=[];
 
@@ -608,11 +598,13 @@ async function search(){
       const walkRoute=await getWalkingRoute(fromLatLng,closest.geometry.location);
 
       // 札幌地下鉄の場合は乗り換え考慮運賃を計算
-      const boardNearest=findNearestSubwayStation(closest.geometry.location, closest.name);
-      const alightNearest=findNearestSubwayStation(ds.geometry.location, ds.name);
+      const boardNearest=closest.subwayId?closest:findNearestSubwayStation(closest.geometry.location, closest.name);
+      const alightNearest=ds.subwayId?ds:findNearestSubwayStation(ds.geometry.location, ds.name);
+      const boardId=closest.subwayId||boardNearest?.id;
+      const alightId=ds.subwayId||alightNearest?.id;
       let subwayInfo=null;
-      if(boardNearest&&alightNearest&&boardNearest.id!==alightNearest.id){
-        subwayInfo=calcSubwayRoute(boardNearest.id,alightNearest.id);
+      if(boardId&&alightId&&boardId!==alightId){
+        subwayInfo=calcSubwayRoute(boardId,alightId);
       }
       // 乗り換えなし設定の場合、乗り換えが必要なルートをスキップ
       if(!allowTransfer&&subwayInfo&&subwayInfo.transfers>0) continue;
@@ -660,11 +652,13 @@ async function search(){
         const taxiToSt=await getDrivingRoute(fromLatLng,closestFrom.geometry.location);
         if(taxiToSt){
           const taxiCostToSt=txCost(taxiToSt.distKm);
-          const boardNearest=findNearestSubwayStation(closestFrom.geometry.location, closestFrom.name);
-          const alightNearest=findNearestSubwayStation(ds.geometry.location, ds.name);
+          const boardNearest=closestFrom.subwayId?closestFrom:findNearestSubwayStation(closestFrom.geometry.location, closestFrom.name);
+          const alightNearest=ds.subwayId?ds:findNearestSubwayStation(ds.geometry.location, ds.name);
+          const boardId2=closestFrom.subwayId||boardNearest?.id;
+          const alightId2=ds.subwayId||alightNearest?.id;
           let subwayInfo=null;
-          if(boardNearest&&alightNearest&&boardNearest.id!==alightNearest.id){
-            subwayInfo=calcSubwayRoute(boardNearest.id,alightNearest.id);
+          if(boardId2&&alightId2&&boardId2!==alightId2){
+            subwayInfo=calcSubwayRoute(boardId2,alightId2);
           }
           // 乗り換えなし設定の場合、乗り換えが必要なルートをスキップ
           if(!allowTransfer&&subwayInfo&&subwayInfo.transfers>0) continue;
@@ -782,6 +776,6 @@ function showErr(msg){const e=document.createElement('div');e.className='errmsg'
 
 window.initMap=initMap;
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgF7d_zuAMKnxtEKUAFU89URmUV_1wJTQ&libraries=places,geometry&callback=initMap&language=ja" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCRwGUKB3-lWIVf1EI4u-ANijHJ0ZW5EQ&libraries=places,geometry&callback=initMap&language=ja" async defer></script>
 </body>
 </html>
