@@ -91,90 +91,89 @@ header p{font-size:11px;color:rgba(255,255,255,0.8);margin-top:2px}
 </head>
 <body>
 <header>
-  <h1>🗺 ルート比較ナビ</h1>
-  <p>出発地から目的地まで最適ルートを提案</p>
+<h1>🗺 ルート比較ナビ</h1>
+<p>出発地から目的地まで最適ルートを提案</p>
 </header>
 <div class="container">
 <div class="card">
-  <div class="sec">現在地 / 出発地</div>
-  <button class="gps-btn" id="gps-btn" onclick="getGPS()">
-    <span style="font-size:16px">📍</span> GPSで現在地を取得
-  </button>
-  <div class="input-wrap">
-    <span class="input-icon">🔵</span>
-    <input type="text" id="from-input" placeholder="または住所・駅名を入力" autocomplete="off" onblur="resolveFrom()"/>
-  </div>
-  <div class="resolved" id="from-resolved"></div>
+<div class="sec">現在地 / 出発地</div>
+<button class="gps-btn" id="gps-btn" onclick="getGPS()">
+<span style="font-size:16px">📍</span> GPSで現在地を取得
+</button>
+<div class="input-wrap">
+<span class="input-icon">🔵</span>
+<input type="text" id="from-input" placeholder="または住所・駅名を入力" autocomplete="off" onblur="resolveFrom()"/>
+</div>
+<div class="resolved" id="from-resolved"></div>
 </div>
 <div class="card">
-  <div class="sec">目的地</div>
-  <div class="dest-list" id="dest-list"></div>
-  <button class="add-dest-btn" onclick="openModal()">＋ よく使う場所を登録</button>
-  <div style="text-align:center;font-size:11px;color:#aaa;margin:4px 0 8px">または直接入力</div>
-  <div class="input-wrap">
-    <span class="input-icon">🔴</span>
-    <input type="text" id="to-input" placeholder="目的地を入力" autocomplete="off" onblur="resolveTo()"/>
-  </div>
-  <div class="resolved" id="to-resolved"></div>
+<div class="sec">目的地</div>
+<div class="dest-list" id="dest-list"></div>
+<button class="add-dest-btn" onclick="openModal()">＋ よく使う場所を登録</button>
+<div style="text-align:center;font-size:11px;color:#aaa;margin:4px 0 8px">または直接入力</div>
+<div class="input-wrap">
+<span class="input-icon">🔴</span>
+<input type="text" id="to-input" placeholder="目的地を入力" autocomplete="off" onblur="resolveTo()"/>
+</div>
+<div class="resolved" id="to-resolved"></div>
 </div>
 <div class="card">
-  <div class="sec">徒歩許容距離</div>
-  <div class="hint">出発地・降車駅からこの距離以内なら徒歩で向かいます。範囲外はタクシーを使います。</div>
-  <div class="walk-row">
-    <div class="wbtn on" id="w-500" onclick="setWalk(500)">500m以内</div>
-    <div class="wbtn" id="w-1000" onclick="setWalk(1000)">1km以内</div>
-    <div class="wbtn" id="w-none" onclick="setWalk(9999)">制限なし</div>
-  </div>
-  <div class="sec" style="margin-top:12px">乗り換え設定</div>
-  <div class="walk-row">
-    <div class="wbtn on" id="tr-yes" onclick="setTransfer(true)">🔄 乗り換えあり（最安優先）</div>
-    <div class="wbtn" id="tr-no" onclick="setTransfer(false)">🧳 乗り換えなし（直通のみ）</div>
-  </div>
-  <div style="font-size:11px;color:#888;margin-top:4px;padding-left:2px">荷物が多いときは「乗り換えなし」がおすすめです</div>
+<div class="sec">徒歩許容距離</div>
+<div class="hint">出発地・降車駅からこの距離以内なら徒歩で向かいます。範囲外はタクシーを使います。</div>
+<div class="walk-row">
+<div class="wbtn on" id="w-500" onclick="setWalk(500)">500m以内</div>
+<div class="wbtn" id="w-1000" onclick="setWalk(1000)">1km以内</div>
+<div class="wbtn" id="w-none" onclick="setWalk(9999)">制限なし</div>
+</div>
+<div class="sec" style="margin-top:12px">乗り換え設定</div>
+<div class="walk-row">
+<div class="wbtn on" id="tr-yes" onclick="setTransfer(true)">🔄 乗り換えあり（最安優先）</div>
+<div class="wbtn" id="tr-no" onclick="setTransfer(false)">🧳 乗り換えなし（直通のみ）</div>
+</div>
+<div style="font-size:11px;color:#888;margin-top:4px;padding-left:2px">荷物が多いときは「乗り換えなし」がおすすめです</div>
 </div>
 <div class="card">
-  <div class="sec">タクシー料金地域</div>
-  <div class="region-row">
-    <div class="rbtn on" id="r-sapporo" onclick="setReg('sapporo')">札幌</div>
-    <div class="rbtn" id="r-tokyo" onclick="setReg('tokyo')">東京</div>
-    <div class="rbtn" id="r-osaka" onclick="setReg('osaka')">大阪</div>
-    <div class="rbtn" id="r-nagoya" onclick="setReg('nagoya')">名古屋</div>
-    <div class="rbtn" id="r-other" onclick="setReg('other')">その他</div>
-  </div>
-  <div class="winter-row" id="winter-row">
-    <div class="winter-label">❄️ 冬季割増（2割増）を適用<br><span style="font-size:10px;color:#aaa">札幌：12/17〜3/26対象</span></div>
-    <label class="winter-toggle">
-      <input type="checkbox" id="winter-check" checked>
-      <span class="winter-slider"></span>
-    </label>
-  </div>
-  <button class="go" id="go-btn" onclick="search()">最適ルートを検索する</button>
+<div class="sec">タクシー料金地域</div>
+<div class="region-row">
+<div class="rbtn on" id="r-sapporo" onclick="setReg('sapporo')">札幌</div>
+<div class="rbtn" id="r-tokyo" onclick="setReg('tokyo')">東京</div>
+<div class="rbtn" id="r-osaka" onclick="setReg('osaka')">大阪</div>
+<div class="rbtn" id="r-nagoya" onclick="setReg('nagoya')">名古屋</div>
+<div class="rbtn" id="r-other" onclick="setReg('other')">その他</div>
+</div>
+<div class="winter-row" id="winter-row">
+<div class="winter-label">❄️ 冬季割増（2割増）を適用<br><span style="font-size:10px;color:#aaa">札幌：12/17〜3/26対象</span></div>
+<label class="winter-toggle">
+<input type="checkbox" id="winter-check" checked>
+<span class="winter-slider"></span>
+</label>
+</div>
+<button class="go" id="go-btn" onclick="search()">最適ルートを検索する</button>
 </div>
 <div id="results">
-  <div class="sum-row" id="sum-row"></div>
-  <div class="card" style="padding:12px">
-    <div class="sec" style="margin-bottom:6px">地図（ルートをタップで切替）</div>
-    <div id="map"></div>
-    <div class="legend" id="map-legend"></div>
-  </div>
-  <div class="sec">ルート比較</div>
-  <div id="result-list"></div>
-  <p class="disc" id="disc-text"></p>
+<div class="sum-row" id="sum-row"></div>
+<div class="card" style="padding:12px">
+<div class="sec" style="margin-bottom:6px">地図（ルートをタップで切替）</div>
+<div id="map"></div>
+<div class="legend" id="map-legend"></div>
+</div>
+<div class="sec">ルート比較</div>
+<div id="result-list"></div>
+<p class="disc" id="disc-text"></p>
 </div>
 </div>
 <div class="modal-bg" id="modal-bg">
-  <div class="modal">
-    <h3>よく使う場所を登録</h3>
-    <input type="text" id="modal-name" placeholder="名前（例：自宅、職場）"/>
-    <input type="text" id="modal-addr" placeholder="住所・施設名" onblur="resolveModal()"/>
-    <div class="modal-resolved" id="modal-resolved"></div>
-    <div class="modal-btns">
-      <button class="modal-cancel" onclick="closeModal()">キャンセル</button>
-      <button class="modal-save" onclick="saveModal()">保存</button>
-    </div>
-  </div>
+<div class="modal">
+<h3>よく使う場所を登録</h3>
+<input type="text" id="modal-name" placeholder="名前（例：自宅、職場）"/>
+<input type="text" id="modal-addr" placeholder="住所・施設名" onblur="resolveModal()"/>
+<div class="modal-resolved" id="modal-resolved"></div>
+<div class="modal-btns">
+<button class="modal-cancel" onclick="closeModal()">キャンセル</button>
+<button class="modal-save" onclick="saveModal()">保存</button>
 </div>
-
+</div>
+</div>
 <script>
 const APIKEY='AIzaSyBgF7d_zuAMKnxtEKUAFU89URmUV_1wJTQ';
 
@@ -182,7 +181,6 @@ const APIKEY='AIzaSyBgF7d_zuAMKnxtEKUAFU89URmUV_1wJTQ';
 // 札幌地下鉄 全駅データ（路線・駅番号付き）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const SAPPORO_SUBWAY = {
-  // 南北線 (N) 緑
   N: {
     name:'南北線', color:'#2E8B57',
     stations:[
@@ -204,7 +202,6 @@ const SAPPORO_SUBWAY = {
       {id:'N16',name:'真駒内',lat:42.9929,lng:141.3531}
     ]
   },
-  // 東西線 (T) 橙
   T: {
     name:'東西線', color:'#E87722',
     stations:[
@@ -229,7 +226,6 @@ const SAPPORO_SUBWAY = {
       {id:'T19',name:'新さっぽろ',lat:43.0133,lng:141.4428}
     ]
   },
-  // 東豊線 (H) 青
   H: {
     name:'東豊線', color:'#1F6CB2',
     stations:[
@@ -251,13 +247,11 @@ const SAPPORO_SUBWAY = {
   }
 };
 
-// 乗り換え駅（同一駅扱い）
 const TRANSFER_STATIONS = {
   'さっぽろ': ['N06','H07'],
   '大通': ['N07','T09','H08']
 };
 
-// 全駅フラット化
 const ALL_STATIONS = [];
 Object.entries(SAPPORO_SUBWAY).forEach(([line, data])=>{
   data.stations.forEach(s=>{
@@ -265,151 +259,141 @@ Object.entries(SAPPORO_SUBWAY).forEach(([line, data])=>{
   });
 });
 
-// 駅名または座標から最も近い地下鉄駅を返す
-function findNearestSubwayStation(latLng, stationName) {
-  // 駅名で完全一致を優先
-  if(stationName){
-    const nameMatch=ALL_STATIONS.filter(s=>
-      stationName.includes(s.name)||s.name.includes(stationName.replace('駅',''))
-    );
-    if(nameMatch.length>0){
-      // 名前一致の中で最近隣を返す
-      let best=null,bestDist=Infinity;
-      nameMatch.forEach(s=>{
-        const d=google.maps.geometry.spherical.computeDistanceBetween(latLng,new google.maps.LatLng(s.lat,s.lng));
-        if(d<bestDist){bestDist=d;best={...s,dist:d};}
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 【修正①】最寄り駅検索：徒歩許容距離内で最近隣のN駅上位を返す
+// 出発側は walkLimit 内を優先、なければ最近隣1駅のみ返す
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function getNearbyStationsFromData(latLng, radius) {
+  const results = [];
+  ALL_STATIONS.forEach(s => {
+    const stLatLng = new google.maps.LatLng(s.lat, s.lng);
+    const dist = google.maps.geometry.spherical.computeDistanceBetween(latLng, stLatLng);
+    if (dist <= radius) {
+      results.push({
+        name: s.name, tType:'subway', dist,
+        geometry:{location: stLatLng},
+        subwayId: s.id, line: s.line
       });
-      if(best&&best.dist<2000) return best;
     }
-  }
-  // 座標で最近隣を返す
-  let best=null, bestDist=Infinity;
-  ALL_STATIONS.forEach(s=>{
-    const d=google.maps.geometry.spherical.computeDistanceBetween(
-      latLng, new google.maps.LatLng(s.lat,s.lng)
-    );
-    if(d<bestDist){bestDist=d;best={...s,dist:d};}
   });
-  return best;
+  results.sort((a,b) => a.dist - b.dist);
+  return results;
 }
 
-// 乗車駅→降車駅の地下鉄ルートを計算（乗り換え考慮）
+// 【修正②】出発地側：徒歩圏内の駅 + タクシー用の真の最近隣を正確に取得
+function getFromStationCandidates(latLng, walkLimit) {
+  // 全駅との距離を計算して距離順にソート
+  const all = ALL_STATIONS.map(s => {
+    const stLatLng = new google.maps.LatLng(s.lat, s.lng);
+    const dist = google.maps.geometry.spherical.computeDistanceBetween(latLng, stLatLng);
+    return { name:s.name, tType:'subway', dist, geometry:{location:stLatLng}, subwayId:s.id, line:s.line };
+  });
+  all.sort((a,b) => a.dist - b.dist);
+
+  // 徒歩圏内の駅（walkLimit以内）
+  const walkable = all.filter(s => s.dist <= walkLimit);
+  // 真の最近隣1駅（タクシー用）
+  const nearest = all[0];
+
+  return { walkable, nearest };
+}
+
 function calcSubwayRoute(boardId, alightId) {
-  // 同一駅
-  if(boardId===alightId) return {fare:0, time:0, transfers:0, lines:[]};
+  if(boardId === alightId) return {fare:0, time:0, transfers:0, lines:[]};
 
-  // 同一路線直通
-  const boardStation = ALL_STATIONS.find(s=>s.id===boardId);
-  const alightStation = ALL_STATIONS.find(s=>s.id===alightId);
-  if(!boardStation||!alightStation) return null;
+  const boardStation = ALL_STATIONS.find(s => s.id === boardId);
+  const alightStation = ALL_STATIONS.find(s => s.id === alightId);
+  if(!boardStation || !alightStation) return null;
 
-  // 同一路線チェック
-  if(boardStation.line===alightStation.line){
-    const line=SAPPORO_SUBWAY[boardStation.line];
-    const bi=line.stations.findIndex(s=>s.id===boardId);
-    const ai=line.stations.findIndex(s=>s.id===alightId);
-    const stops=Math.abs(bi-ai);
-    const distKm=calcLineDist(boardStation.line, bi, ai);
+  if(boardStation.line === alightStation.line){
+    const line = SAPPORO_SUBWAY[boardStation.line];
+    const bi = line.stations.findIndex(s => s.id === boardId);
+    const ai = line.stations.findIndex(s => s.id === alightId);
+    const stops = Math.abs(bi - ai);
+    const distKm = calcLineDist(boardStation.line, bi, ai);
     return {
-      fare:subwayFare(distKm),
-      time:stops*2+2,
-      transfers:0,
+      fare: subwayFare(distKm), time: stops*2+2, transfers:0,
       lines:[{line:boardStation.line, from:boardStation.name, to:alightStation.name, color:boardStation.lineColor}],
       distKm
     };
   }
 
-  // 乗り換えルート探索（大通・さっぽろ経由）
-  const transferPoints=['大通','さっぽろ'];
-  let bestRoute=null;
+  const transferPoints = ['大通','さっぽろ'];
+  let bestRoute = null;
 
   for(const tp of transferPoints){
-    const tpIds=TRANSFER_STATIONS[tp];
+    const tpIds = TRANSFER_STATIONS[tp];
     if(!tpIds) continue;
+    const tpBoard = tpIds.find(id => id.startsWith(boardStation.line));
+    const tpAlight = tpIds.find(id => id.startsWith(alightStation.line));
+    if(!tpBoard || !tpAlight) continue;
 
-    // 乗車線側の乗り換え駅ID
-    const tpBoard=tpIds.find(id=>id.startsWith(boardStation.line));
-    // 降車線側の乗り換え駅ID
-    const tpAlight=tpIds.find(id=>id.startsWith(alightStation.line));
+    const seg1 = calcSingleLineSeg(boardId, tpBoard);
+    const seg2 = calcSingleLineSeg(tpAlight, alightId);
+    if(!seg1 || !seg2) continue;
 
-    if(!tpBoard||!tpAlight) continue;
+    const totalDist = seg1.distKm + seg2.distKm;
+    const totalFare = subwayFare(totalDist);
+    const totalTime = seg1.time + seg2.time + 3;
 
-    // 区間1: 乗車駅 → 乗り換え駅
-    const seg1=calcSingleLineSeg(boardId, tpBoard);
-    // 区間2: 乗り換え駅 → 降車駅
-    const seg2=calcSingleLineSeg(tpAlight, alightId);
-
-    if(!seg1||!seg2) continue;
-
-    const totalDist=seg1.distKm+seg2.distKm;
-    const totalFare=subwayFare(totalDist);
-    const totalTime=seg1.time+seg2.time+3; // 乗り換え3分
-
-    const route={
-      fare:totalFare,
-      time:totalTime,
-      transfers:1,
-      transferAt:tp,
+    const route = {
+      fare: totalFare, time: totalTime, transfers:1, transferAt: tp,
       lines:[
-        {line:boardStation.line,from:boardStation.name,to:tp,color:boardStation.lineColor},
-        {line:alightStation.line,from:tp,to:alightStation.name,color:alightStation.lineColor}
+        {line:boardStation.line, from:boardStation.name, to:tp, color:boardStation.lineColor},
+        {line:alightStation.line, from:tp, to:alightStation.name, color:alightStation.lineColor}
       ],
-      distKm:totalDist
+      distKm: totalDist
     };
-
-    if(!bestRoute||totalFare<bestRoute.fare) bestRoute=route;
+    if(!bestRoute || totalFare < bestRoute.fare) bestRoute = route;
   }
-
-  // 同一路線で到達できる場合も試す（東西線→南北線→東豊線など2乗り換えは省略）
   return bestRoute;
 }
 
 function calcSingleLineSeg(fromId, toId){
-  const from=ALL_STATIONS.find(s=>s.id===fromId);
-  const to=ALL_STATIONS.find(s=>s.id===toId);
-  if(!from||!to||from.line!==to.line) return null;
-  const line=SAPPORO_SUBWAY[from.line];
-  const fi=line.stations.findIndex(s=>s.id===fromId);
-  const ti=line.stations.findIndex(s=>s.id===toId);
-  const stops=Math.abs(fi-ti);
-  const distKm=calcLineDist(from.line,fi,ti);
-  return {distKm, time:stops*2+1};
+  const from = ALL_STATIONS.find(s => s.id === fromId);
+  const to = ALL_STATIONS.find(s => s.id === toId);
+  if(!from || !to || from.line !== to.line) return null;
+  const line = SAPPORO_SUBWAY[from.line];
+  const fi = line.stations.findIndex(s => s.id === fromId);
+  const ti = line.stations.findIndex(s => s.id === toId);
+  const stops = Math.abs(fi - ti);
+  const distKm = calcLineDist(from.line, fi, ti);
+  return {distKm, time: stops*2+1};
 }
 
 function calcLineDist(lineKey, fromIdx, toIdx){
-  const stations=SAPPORO_SUBWAY[lineKey].stations;
-  const min=Math.min(fromIdx,toIdx);
-  const max=Math.max(fromIdx,toIdx);
-  let dist=0;
-  for(let i=min;i<max;i++){
-    const a=new google.maps.LatLng(stations[i].lat,stations[i].lng);
-    const b=new google.maps.LatLng(stations[i+1].lat,stations[i+1].lng);
-    dist+=google.maps.geometry.spherical.computeDistanceBetween(a,b)/1000;
+  const stations = SAPPORO_SUBWAY[lineKey].stations;
+  const min = Math.min(fromIdx, toIdx);
+  const max = Math.max(fromIdx, toIdx);
+  let dist = 0;
+  for(let i = min; i < max; i++){
+    const a = new google.maps.LatLng(stations[i].lat, stations[i].lng);
+    const b = new google.maps.LatLng(stations[i+1].lat, stations[i+1].lng);
+    dist += google.maps.geometry.spherical.computeDistanceBetween(a,b)/1000;
   }
   return Math.round(dist*10)/10;
 }
 
 function subwayFare(distKm){
-  if(distKm<=2)return 210;
-  if(distKm<=5)return 250;
-  if(distKm<=9)return 290;
-  if(distKm<=13)return 330;
+  if(distKm <= 2) return 210;
+  if(distKm <= 5) return 250;
+  if(distKm <= 9) return 290;
+  if(distKm <= 13) return 330;
   return 370;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // メインロジック
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-let geocoder=null,directionsService=null,placesService=null,gmap=null;
-let destinations=JSON.parse(localStorage.getItem('destinations')||'[]');
-let fromLatLng=null,toLatLng=null,toName='目的地';
-let selectedDestIdx=-1,modalLatLng=null;
-let walkLimit=500,reg='sapporo',allowTransfer=true;
-let routes=[],renderers=[];
+let geocoder=null, directionsService=null, placesService=null, gmap=null;
+let destinations = JSON.parse(localStorage.getItem('destinations')||'[]');
+let fromLatLng=null, toLatLng=null, toName='目的地';
+let selectedDestIdx=-1, modalLatLng=null;
+let walkLimit=500, reg='sapporo', allowTransfer=true;
+let routes=[], renderers=[];
 
 const COLORS=['#378ADD','#EF9F27','#1D9E75','#D85A30','#534AB7','#D4537E'];
 const STEP_COLORS={walk:'#888780',subway:'#378ADD',taxi:'#EF9F27',bus:'#639922',train:'#534AB7'};
-
 const TAXI={
   sapporo:{start:600,startKm:1.05,perM:272,perCost:100,name:'札幌'},
   tokyo:{start:500,startKm:1.096,perM:255,perCost:100,name:'東京'},
@@ -419,314 +403,308 @@ const TAXI={
 };
 
 function txCost(km){
-  const t=TAXI[reg];
-  const winter=reg==='sapporo'&&document.getElementById('winter-check').checked;
-  const overM=Math.max(0,km*1000-t.startKm*1000);
-  const base=t.start+Math.floor(overM/t.perM)*t.perCost;
-  return Math.round(winter?base*1.2:base);
+  const t = TAXI[reg];
+  const winter = reg==='sapporo' && document.getElementById('winter-check').checked;
+  const overM = Math.max(0, km*1000 - t.startKm*1000);
+  const base = t.start + Math.floor(overM/t.perM)*t.perCost;
+  return Math.round(winter ? base*1.2 : base);
 }
-function walkTime(m){return Math.round(m/80)}
-function setWalk(v){walkLimit=v;['500','1000','none'].forEach(x=>document.getElementById('w-'+x).classList.toggle('on',x===String(v)||(x==='none'&&v===9999)))}
-function setTransfer(v){allowTransfer=v;document.getElementById('tr-yes').classList.toggle('on',v);document.getElementById('tr-no').classList.toggle('on',!v);}
-function setReg(r){reg=r;Object.keys(TAXI).forEach(x=>document.getElementById('r-'+x).classList.toggle('on',x===r));document.getElementById('winter-row').style.display=r==='sapporo'?'flex':'none'}
+
+function walkTime(m){ return Math.round(m/80); }
+function setWalk(v){ walkLimit=v; ['500','1000','none'].forEach(x=>document.getElementById('w-'+x).classList.toggle('on',x===String(v)||(x==='none'&&v===9999))); }
+function setTransfer(v){ allowTransfer=v; document.getElementById('tr-yes').classList.toggle('on',v); document.getElementById('tr-no').classList.toggle('on',!v); }
+function setReg(r){ reg=r; Object.keys(TAXI).forEach(x=>document.getElementById('r-'+x).classList.toggle('on',x===r)); document.getElementById('winter-row').style.display=r==='sapporo'?'flex':'none'; }
 
 function initMap(){
-  geocoder=new google.maps.Geocoder();
-  directionsService=new google.maps.DirectionsService();
-  gmap=new google.maps.Map(document.getElementById('map'),{
-    center:{lat:43.0618,lng:141.3545},zoom:12,disableDefaultUI:true,zoomControl:true
+  geocoder = new google.maps.Geocoder();
+  directionsService = new google.maps.DirectionsService();
+  gmap = new google.maps.Map(document.getElementById('map'),{
+    center:{lat:43.0618,lng:141.3545}, zoom:12, disableDefaultUI:true, zoomControl:true
   });
-  placesService=new google.maps.places.PlacesService(gmap);
+  placesService = new google.maps.places.PlacesService(gmap);
   renderDestList();
 }
 
 function getGPS(){
-  if(!navigator.geolocation){alert('このブラウザはGPSに対応していません');return}
-  const btn=document.getElementById('gps-btn');
+  if(!navigator.geolocation){alert('このブラウザはGPSに対応していません');return;}
+  const btn = document.getElementById('gps-btn');
   btn.innerHTML='<span style="font-size:16px">⏳</span> 取得中...';
-  btn.disabled=true;
+  btn.disabled = true;
   navigator.geolocation.getCurrentPosition(pos=>{
-    fromLatLng=new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
-    document.getElementById('from-input').value='';
+    fromLatLng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+    document.getElementById('from-input').value = '';
     geocoder.geocode({location:fromLatLng,language:'ja'},(results,status)=>{
-      const el=document.getElementById('from-resolved');
-      el.textContent='✓ '+(status==='OK'&&results[0]?results[0].formatted_address.replace('日本、',''):'現在地を取得しました');
-      el.className='resolved';
-      btn.innerHTML='<span style="font-size:16px">📍</span> 現在地を再取得';
-      btn.disabled=false;
+      const el = document.getElementById('from-resolved');
+      el.textContent = '✓ '+(status==='OK'&&results[0] ? results[0].formatted_address.replace('日本、','') : '現在地を取得しました');
+      el.className = 'resolved';
+      btn.innerHTML = '<span style="font-size:16px">📍</span> 現在地を再取得';
+      btn.disabled = false;
     });
-  },err=>{
+  }, err=>{
     const msgs={1:'位置情報の使用が許可されていません。ブラウザ設定を確認してください。',2:'位置情報を取得できませんでした。再度お試しください。',3:'タイムアウトしました。再度お試しください。'};
     alert(msgs[err.code]||'位置情報の取得に失敗しました');
     btn.innerHTML='<span style="font-size:16px">📍</span> GPSで現在地を取得';
-    btn.disabled=false;
+    btn.disabled = false;
   },{enableHighAccuracy:true,timeout:10000,maximumAge:0});
 }
 
 function resolveFrom(){
-  const val=document.getElementById('from-input').value.trim();
-  const el=document.getElementById('from-resolved');
-  if(!val){el.textContent='';return}
-  el.textContent='検索中...';el.className='resolved';
+  const val = document.getElementById('from-input').value.trim();
+  const el = document.getElementById('from-resolved');
+  if(!val){el.textContent='';return;}
+  el.textContent='検索中...'; el.className='resolved';
   geocoder.geocode({address:val,region:'JP',language:'ja'},(results,status)=>{
     if(status==='OK'&&results[0]){fromLatLng=results[0].geometry.location;el.textContent='✓ '+results[0].formatted_address.replace('日本、','');el.className='resolved';}
     else{fromLatLng=null;el.textContent='⚠ 場所が見つかりません';el.className='resolved err';}
   });
 }
+
 function resolveTo(){
-  const val=document.getElementById('to-input').value.trim();
-  const el=document.getElementById('to-resolved');
-  if(!val){el.textContent='';return}
-  el.textContent='検索中...';el.className='resolved';
+  const val = document.getElementById('to-input').value.trim();
+  const el = document.getElementById('to-resolved');
+  if(!val){el.textContent='';return;}
+  el.textContent='検索中...'; el.className='resolved';
   geocoder.geocode({address:val,region:'JP',language:'ja'},(results,status)=>{
     if(status==='OK'&&results[0]){toLatLng=results[0].geometry.location;toName=val;selectedDestIdx=-1;renderDestList();el.textContent='✓ '+results[0].formatted_address.replace('日本、','');el.className='resolved';}
     else{toLatLng=null;el.textContent='⚠ 場所が見つかりません';el.className='resolved err';}
   });
 }
+
 function renderDestList(){
-  const el=document.getElementById('dest-list');
-  if(destinations.length===0){el.innerHTML='';return}
-  el.innerHTML=destinations.map((d,i)=>`
+  const el = document.getElementById('dest-list');
+  if(destinations.length===0){el.innerHTML='';return;}
+  el.innerHTML = destinations.map((d,i)=>`
     <div class="dest-item${selectedDestIdx===i?' sel':''}" onclick="selectDest(${i})">
       <span style="font-size:18px">📍</span>
       <div style="flex:1"><div class="dest-name">${d.name}</div><div class="dest-addr">${d.addr}</div></div>
       <span class="dest-del" onclick="event.stopPropagation();deleteDest(${i})">✕</span>
     </div>`).join('');
 }
-function selectDest(i){selectedDestIdx=i;toLatLng=new google.maps.LatLng(destinations[i].lat,destinations[i].lng);toName=destinations[i].name;document.getElementById('to-input').value='';document.getElementById('to-resolved').textContent='';renderDestList()}
-function deleteDest(i){destinations.splice(i,1);localStorage.setItem('destinations',JSON.stringify(destinations));if(selectedDestIdx===i){selectedDestIdx=-1;toLatLng=null;}renderDestList()}
-function openModal(){document.getElementById('modal-name').value='';document.getElementById('modal-addr').value='';document.getElementById('modal-resolved').textContent='';modalLatLng=null;document.getElementById('modal-bg').classList.add('show')}
-function closeModal(){document.getElementById('modal-bg').classList.remove('show')}
+
+function selectDest(i){ selectedDestIdx=i; toLatLng=new google.maps.LatLng(destinations[i].lat,destinations[i].lng); toName=destinations[i].name; document.getElementById('to-input').value=''; document.getElementById('to-resolved').textContent=''; renderDestList(); }
+function deleteDest(i){ destinations.splice(i,1); localStorage.setItem('destinations',JSON.stringify(destinations)); if(selectedDestIdx===i){selectedDestIdx=-1;toLatLng=null;} renderDestList(); }
+function openModal(){ document.getElementById('modal-name').value=''; document.getElementById('modal-addr').value=''; document.getElementById('modal-resolved').textContent=''; modalLatLng=null; document.getElementById('modal-bg').classList.add('show'); }
+function closeModal(){ document.getElementById('modal-bg').classList.remove('show'); }
 function resolveModal(){
-  const val=document.getElementById('modal-addr').value.trim();
-  const el=document.getElementById('modal-resolved');
-  if(!val){el.textContent='';return}
-  el.textContent='検索中...';el.className='modal-resolved';
+  const val = document.getElementById('modal-addr').value.trim();
+  const el = document.getElementById('modal-resolved');
+  if(!val){el.textContent='';return;}
+  el.textContent='検索中...'; el.className='modal-resolved';
   geocoder.geocode({address:val,region:'JP',language:'ja'},(results,status)=>{
     if(status==='OK'&&results[0]){modalLatLng={lat:results[0].geometry.location.lat(),lng:results[0].geometry.location.lng()};el.textContent='✓ '+results[0].formatted_address.replace('日本、','');el.className='modal-resolved';}
     else{modalLatLng=null;el.textContent='⚠ 場所が見つかりません';el.className='modal-resolved err';}
   });
 }
 function saveModal(){
-  const name=document.getElementById('modal-name').value.trim();
-  if(!name){alert('名前を入力してください');return}
-  if(!modalLatLng){alert('住所を確認してください');return}
-  const addr=document.getElementById('modal-resolved').textContent.replace('✓ ','');
+  const name = document.getElementById('modal-name').value.trim();
+  if(!name){alert('名前を入力してください');return;}
+  if(!modalLatLng){alert('住所を確認してください');return;}
+  const addr = document.getElementById('modal-resolved').textContent.replace('✓ ','');
   destinations.push({name,addr,lat:modalLatLng.lat,lng:modalLatLng.lng});
   localStorage.setItem('destinations',JSON.stringify(destinations));
-  closeModal();renderDestList();selectDest(destinations.length-1);
+  closeModal(); renderDestList(); selectDest(destinations.length-1);
 }
 
-function getDist(a,b){return google.maps.geometry.spherical.computeDistanceBetween(a,b)}
+function getDist(a,b){ return google.maps.geometry.spherical.computeDistanceBetween(a,b); }
 
-function getNearbyStationsFromData(latLng,radius){
-  const results=[];
-  ALL_STATIONS.forEach(s=>{
-    const stLatLng=new google.maps.LatLng(s.lat,s.lng);
-    const dist=google.maps.geometry.spherical.computeDistanceBetween(latLng,stLatLng);
-    if(dist<=radius){
-      results.push({name:s.name,tType:'subway',dist,geometry:{location:stLatLng},subwayId:s.id,line:s.line});
-    }
-  });
-  results.sort((a,b)=>a.dist-b.dist);
-  return results;
-}
-
-function getDrivingRoute(origin,dest){
+function getDrivingRoute(origin, dest){
   return new Promise(resolve=>{
     directionsService.route({origin,destination:dest,travelMode:google.maps.TravelMode.DRIVING,region:'JP'},(result,status)=>{
-      if(status!==google.maps.DirectionsStatus.OK){resolve(null);return}
-      const leg=result.routes[0].legs[0];
-      resolve({result,distKm:Math.round(leg.distance.value/100)/10,duration:Math.round(leg.duration.value/60)});
+      if(status!==google.maps.DirectionsStatus.OK){resolve(null);return;}
+      const leg = result.routes[0].legs[0];
+      resolve({result, distKm:Math.round(leg.distance.value/100)/10, duration:Math.round(leg.duration.value/60)});
     });
   });
 }
-function getWalkingRoute(origin,dest){
+
+function getWalkingRoute(origin, dest){
   return new Promise(resolve=>{
     directionsService.route({origin,destination:dest,travelMode:google.maps.TravelMode.WALKING,region:'JP'},(result,status)=>{
-      if(status!==google.maps.DirectionsStatus.OK){resolve(null);return}
-      const leg=result.routes[0].legs[0];
-      resolve({result,distM:leg.distance.value,duration:Math.round(leg.duration.value/60)});
+      if(status!==google.maps.DirectionsStatus.OK){resolve(null);return;}
+      const leg = result.routes[0].legs[0];
+      resolve({result, distM:leg.distance.value, duration:Math.round(leg.duration.value/60)});
     });
   });
 }
 
 async function search(){
   document.querySelectorAll('.errmsg').forEach(e=>e.remove());
-  if(!fromLatLng){showErr('出発地を入力またはGPSで取得してください');return}
-  if(!toLatLng){showErr('目的地を選択または入力してください');return}
+  if(!fromLatLng){showErr('出発地を入力またはGPSで取得してください');return;}
+  if(!toLatLng){showErr('目的地を選択または入力してください');return;}
 
-  const btn=document.getElementById('go-btn');
-  btn.disabled=true;btn.textContent='検索中...';
+  const btn = document.getElementById('go-btn');
+  btn.disabled=true; btn.textContent='検索中...';
   document.getElementById('results').style.display='none';
 
-  // 組み込み駅データから周辺駅を取得（Places API不要）
-  const destTransit=getNearbyStationsFromData(toLatLng,3000);
-  const fromTransit=getNearbyStationsFromData(fromLatLng,Math.max(walkLimit,3000));
+  // 目的地側：3km圏内の駅を候補に（上位5駅）
+  const destTransit = getNearbyStationsFromData(toLatLng, 3000).slice(0, 5);
 
-  routes=[];
+  // 【修正②適用】出発地側：徒歩圏 + 真の最近隣を正確に取得
+  const { walkable: walkableFrom, nearest: nearestFrom } = getFromStationCandidates(fromLatLng, walkLimit);
+
+  routes = [];
 
   // タクシー直行
-  const directTaxi=await getDrivingRoute(fromLatLng,toLatLng);
+  const directTaxi = await getDrivingRoute(fromLatLng, toLatLng);
   if(directTaxi){
     routes.push({
-      id:'direct',color:'#888780',title:'タクシー直行',isDirect:true,
+      id:'direct', color:'#888780', title:'タクシー直行', isDirect:true,
       steps:[{type:'taxi',icon:'🚕',label:'タクシー直行',desc:`出発地 → ${toName}`,dist:`${directTaxi.distKm}km`,time:directTaxi.duration,cost:txCost(directTaxi.distKm),color:STEP_COLORS.taxi}],
-      totalCost:txCost(directTaxi.distKm),totalTime:directTaxi.duration,
-      mapSegments:[{result:directTaxi.result,color:'#888780'}]
+      totalCost:txCost(directTaxi.distKm), totalTime:directTaxi.duration,
+      mapSegments:[{result:directTaxi.result, color:'#888780'}]
     });
   }
 
-  // 乗り換えを考慮したルート生成
-  const destStations=destTransit.slice(0,5);
-  const walkableFrom=fromTransit.filter(s=>getDist(fromLatLng,s.geometry.location)<=walkLimit);
-  const closestFrom=fromTransit.length>0?fromTransit.reduce((a,b)=>getDist(fromLatLng,a.geometry.location)<getDist(fromLatLng,b.geometry.location)?a:b):null;
+  for(let i = 0; i < destTransit.length; i++){
+    const ds = destTransit[i];
+    const color = COLORS[i % COLORS.length];
+    const destDistM = Math.round(getDist(ds.geometry.location, toLatLng));
+    const destIsWalk = destDistM <= walkLimit;
+    const taxiToDest = destIsWalk ? null : await getDrivingRoute(ds.geometry.location, toLatLng);
+    if(!destIsWalk && !taxiToDest) continue;
 
-  for(let i=0;i<destStations.length;i++){
-    const ds=destStations[i];
-    const color=COLORS[i%COLORS.length];
-    const destDistM=Math.round(getDist(ds.geometry.location,toLatLng));
-    const destIsWalk=destDistM<=walkLimit;
+    const lastLegCost = destIsWalk ? 0 : txCost(taxiToDest.distKm);
+    const lastLegTime = destIsWalk ? walkTime(destDistM) : (taxiToDest ? taxiToDest.duration : 0);
+    const lastStepDesc = `${ds.name} → ${toName}`;
+    const lastStep = destIsWalk
+      ? {type:'walk',icon:'🚶',label:'徒歩',desc:lastStepDesc,dist:`${destDistM}m`,time:lastLegTime,cost:0,color:STEP_COLORS.walk}
+      : {type:'taxi',icon:'🚕',label:'タクシー',desc:lastStepDesc,dist:`${taxiToDest.distKm}km`,time:lastLegTime,cost:lastLegCost,color:STEP_COLORS.taxi};
 
-    const taxiToDest=destIsWalk?null:await getDrivingRoute(ds.geometry.location,toLatLng);
-    if(!destIsWalk&&!taxiToDest) continue;
+    // ── 徒歩→地下鉄→タクシー/徒歩 ──
+    if(walkableFrom.length > 0){
+      // 徒歩圏内で最近隣の駅を使う
+      const closest = walkableFrom[0];
+      const walkDistM = Math.round(closest.dist);
+      const wTime = walkTime(walkDistM);
+      const walkRoute = await getWalkingRoute(fromLatLng, closest.geometry.location);
 
-    const lastLegCost=destIsWalk?0:txCost(taxiToDest.distKm);
-    const lastLegTime=destIsWalk?walkTime(destDistM):(taxiToDest?taxiToDest.duration:0);
-    const lastStepDesc=`${ds.name} → ${toName}`;
-    const lastStep=destIsWalk?
-      {type:'walk',icon:'🚶',label:'徒歩',desc:lastStepDesc,dist:`${destDistM}m`,time:lastLegTime,cost:0,color:STEP_COLORS.walk}:
-      {type:'taxi',icon:'🚕',label:'タクシー',desc:lastStepDesc,dist:`${taxiToDest.distKm}km`,time:lastLegTime,cost:lastLegCost,color:STEP_COLORS.taxi};
-
-    // 徒歩→地下鉄→タクシー/徒歩
-    if(walkableFrom.length>0){
-      const closest=walkableFrom.reduce((a,b)=>getDist(fromLatLng,a.geometry.location)<getDist(fromLatLng,b.geometry.location)?a:b);
-      const walkDistM=Math.round(getDist(fromLatLng,closest.geometry.location));
-      const wTime=walkTime(walkDistM);
-      const walkRoute=await getWalkingRoute(fromLatLng,closest.geometry.location);
-
-      // 札幌地下鉄の場合は乗り換え考慮運賃を計算
-      const boardId=closest.subwayId;
-      const alightId=ds.subwayId;
-      let subwayInfo=null;
-      if(boardId&&alightId&&boardId!==alightId){
-        subwayInfo=calcSubwayRoute(boardId,alightId);
+      const boardId = closest.subwayId;
+      const alightId = ds.subwayId;
+      let subwayInfo = null;
+      if(boardId && alightId && boardId !== alightId){
+        subwayInfo = calcSubwayRoute(boardId, alightId);
       }
-      // 乗り換えなし設定の場合、乗り換えが必要なルートをスキップ
-      if(!allowTransfer&&subwayInfo&&subwayInfo.transfers>0) continue;
+      if(!allowTransfer && subwayInfo && subwayInfo.transfers > 0) continue;
 
-      const stFare=subwayInfo?subwayInfo.fare:210;
-      const stTime=subwayInfo?subwayInfo.time:5;
-      const stDesc=subwayInfo&&subwayInfo.transfers>0?
-        `${closest.name} → [${subwayInfo.transferAt}乗換] → ${ds.name}`:
-        `${closest.name} → ${ds.name}`;
-      const stLabel=subwayInfo&&subwayInfo.transfers>0?`地下鉄（${subwayInfo.transferAt}乗換）`:'地下鉄';
-      const stIcon=ds.tType==='bus'?'🚌':ds.tType==='train'?'🚃':'🚇';
+      const stFare = subwayInfo ? subwayInfo.fare : 210;
+      const stTime = subwayInfo ? subwayInfo.time : 5;
+      const stDesc = subwayInfo && subwayInfo.transfers > 0
+        ? `${closest.name} → [${subwayInfo.transferAt}乗換] → ${ds.name}`
+        : `${closest.name} → ${ds.name}`;
+      const stLabel = subwayInfo && subwayInfo.transfers > 0
+        ? `地下鉄（${subwayInfo.transferAt}乗換）` : '地下鉄';
+      const stIcon = '🚇';
 
-      const mapSegs=[];
-      if(walkRoute)mapSegs.push({result:walkRoute.result,color:STEP_COLORS.walk,strokeWeight:3});
-      if(subwayInfo&&subwayInfo.lines){
+      const mapSegs = [];
+      if(walkRoute) mapSegs.push({result:walkRoute.result, color:STEP_COLORS.walk, strokeWeight:3});
+      if(subwayInfo && subwayInfo.lines){
         subwayInfo.lines.forEach(l=>{
-          const fromSt=ALL_STATIONS.find(s=>s.name===l.from&&s.line===l.line)||ALL_STATIONS.find(s=>s.name===l.from);
-          const toSt=ALL_STATIONS.find(s=>s.name===l.to&&s.line===l.line)||ALL_STATIONS.find(s=>s.name===l.to);
-          if(fromSt&&toSt)mapSegs.push({type:'straight',from:new google.maps.LatLng(fromSt.lat,fromSt.lng),to:new google.maps.LatLng(toSt.lat,toSt.lng),color:l.color||STEP_COLORS.subway});
+          const fromSt = ALL_STATIONS.find(s=>s.name===l.from&&s.line===l.line) || ALL_STATIONS.find(s=>s.name===l.from);
+          const toSt = ALL_STATIONS.find(s=>s.name===l.to&&s.line===l.line) || ALL_STATIONS.find(s=>s.name===l.to);
+          if(fromSt&&toSt) mapSegs.push({type:'straight',from:new google.maps.LatLng(fromSt.lat,fromSt.lng),to:new google.maps.LatLng(toSt.lat,toSt.lng),color:l.color||STEP_COLORS.subway});
         });
-      }else{
+      } else {
         mapSegs.push({type:'straight',from:closest.geometry.location,to:ds.geometry.location,color:STEP_COLORS.subway});
       }
-      if(!destIsWalk&&taxiToDest)mapSegs.push({result:taxiToDest.result,color:STEP_COLORS.taxi});
+      if(!destIsWalk && taxiToDest) mapSegs.push({result:taxiToDest.result, color:STEP_COLORS.taxi});
 
       routes.push({
-        id:`walk-${i}`,color,
+        id:`walk-${i}`, color,
         title:`徒歩→${stLabel}→${destIsWalk?'徒歩':'タクシー'}（${ds.name}降車）`,
-        alightStation:ds.name,
+        alightStation: ds.name,
         steps:[
           {type:'walk',icon:'🚶',label:'徒歩',desc:`出発地 → ${closest.name}`,dist:`${walkDistM}m`,time:wTime,cost:0,color:STEP_COLORS.walk},
           {type:'subway',icon:stIcon,label:stLabel,desc:stDesc,dist:subwayInfo?`約${subwayInfo.distKm}km`:'',time:stTime,cost:stFare,color:STEP_COLORS.subway},
           lastStep
         ],
-        totalCost:stFare+lastLegCost,
-        totalTime:wTime+stTime+lastLegTime,
-        mapSegments:mapSegs
+        totalCost: stFare + lastLegCost,
+        totalTime: wTime + stTime + lastLegTime,
+        mapSegments: mapSegs
       });
     }
 
-    // タクシー→地下鉄→タクシー/徒歩
-    if(closestFrom&&(walkableFrom.length===0||walkLimit<9999)){
-      const fromDist=getDist(fromLatLng,closestFrom.geometry.location);
-      if(fromDist>walkLimit){
-        const taxiToSt=await getDrivingRoute(fromLatLng,closestFrom.geometry.location);
-        if(taxiToSt){
-          const taxiCostToSt=txCost(taxiToSt.distKm);
-          const boardId2=closestFrom.subwayId;
-          const alightId2=ds.subwayId;
-          let subwayInfo=null;
-          if(boardId2&&alightId2&&boardId2!==alightId2){
-            subwayInfo=calcSubwayRoute(boardId2,alightId2);
-          }
-          // 乗り換えなし設定の場合、乗り換えが必要なルートをスキップ
-          if(!allowTransfer&&subwayInfo&&subwayInfo.transfers>0) continue;
-          const stFare=subwayInfo?subwayInfo.fare:210;
-          const stTime=subwayInfo?subwayInfo.time:5;
-          const stDesc=subwayInfo&&subwayInfo.transfers>0?
-            `${closestFrom.name} → [${subwayInfo.transferAt}乗換] → ${ds.name}`:
-            `${closestFrom.name} → ${ds.name}`;
-          const stLabel=subwayInfo&&subwayInfo.transfers>0?`地下鉄（${subwayInfo.transferAt}乗換）`:'地下鉄';
-
-          const mapSegs2=[];
-          mapSegs2.push({result:taxiToSt.result,color:STEP_COLORS.taxi});
-          mapSegs2.push({type:'straight',from:closestFrom.geometry.location,to:ds.geometry.location,color:STEP_COLORS.subway});
-          if(!destIsWalk&&taxiToDest)mapSegs2.push({result:taxiToDest.result,color:STEP_COLORS.taxi});
-
-          routes.push({
-            id:`taxi-${i}`,color,
-            title:`タクシー→${stLabel}→${destIsWalk?'徒歩':'タクシー'}（${ds.name}降車）`,
-            alightStation:ds.name,
-            steps:[
-              {type:'taxi',icon:'🚕',label:'タクシー',desc:`出発地 → ${closestFrom.name}`,dist:`${taxiToSt.distKm}km`,time:taxiToSt.duration,cost:taxiCostToSt,color:STEP_COLORS.taxi},
-              {type:'subway',icon:'🚇',label:stLabel,desc:stDesc,dist:subwayInfo?`約${subwayInfo.distKm}km`:'',time:stTime,cost:stFare,color:STEP_COLORS.subway},
-              lastStep
-            ],
-            totalCost:taxiCostToSt+stFare+lastLegCost,
-            totalTime:taxiToSt.duration+stTime+lastLegTime,
-            mapSegments:mapSegs2
-          });
+    // ── タクシー→地下鉄→タクシー/徒歩 ──
+    // 【修正③】walkableFromが空、またはwalkLimitが設定されていてnearestFromがwalkLimitを超える場合のみ生成
+    if(walkableFrom.length === 0 || nearestFrom.dist > walkLimit){
+      // nearestFrom（真の最近隣）を使う
+      const taxiToSt = await getDrivingRoute(fromLatLng, nearestFrom.geometry.location);
+      if(taxiToSt){
+        const taxiCostToSt = txCost(taxiToSt.distKm);
+        const boardId2 = nearestFrom.subwayId;
+        const alightId2 = ds.subwayId;
+        let subwayInfo2 = null;
+        if(boardId2 && alightId2 && boardId2 !== alightId2){
+          subwayInfo2 = calcSubwayRoute(boardId2, alightId2);
         }
+        if(!allowTransfer && subwayInfo2 && subwayInfo2.transfers > 0) continue;
+
+        const stFare2 = subwayInfo2 ? subwayInfo2.fare : 210;
+        const stTime2 = subwayInfo2 ? subwayInfo2.time : 5;
+        const stDesc2 = subwayInfo2 && subwayInfo2.transfers > 0
+          ? `${nearestFrom.name} → [${subwayInfo2.transferAt}乗換] → ${ds.name}`
+          : `${nearestFrom.name} → ${ds.name}`;
+        const stLabel2 = subwayInfo2 && subwayInfo2.transfers > 0
+          ? `地下鉄（${subwayInfo2.transferAt}乗換）` : '地下鉄';
+
+        const mapSegs2 = [];
+        mapSegs2.push({result:taxiToSt.result, color:STEP_COLORS.taxi});
+        mapSegs2.push({type:'straight', from:nearestFrom.geometry.location, to:ds.geometry.location, color:STEP_COLORS.subway});
+        if(!destIsWalk && taxiToDest) mapSegs2.push({result:taxiToDest.result, color:STEP_COLORS.taxi});
+
+        routes.push({
+          id:`taxi-${i}`, color,
+          title:`タクシー→${stLabel2}→${destIsWalk?'徒歩':'タクシー'}（${ds.name}降車）`,
+          alightStation: ds.name,
+          steps:[
+            {type:'taxi',icon:'🚕',label:'タクシー',desc:`出発地 → ${nearestFrom.name}`,dist:`${taxiToSt.distKm}km`,time:taxiToSt.duration,cost:taxiCostToSt,color:STEP_COLORS.taxi},
+            {type:'subway',icon:'🚇',label:stLabel2,desc:stDesc2,dist:subwayInfo2?`約${subwayInfo2.distKm}km`:'',time:stTime2,cost:stFare2,color:STEP_COLORS.subway},
+            lastStep
+          ],
+          totalCost: taxiCostToSt + stFare2 + lastLegCost,
+          totalTime: taxiToSt.duration + stTime2 + lastLegTime,
+          mapSegments: mapSegs2
+        });
       }
     }
   }
 
   // 重複除去
-  const seen=new Set();
-  routes=routes.filter(r=>{
-    const key=r.isDirect?'direct':(r.alightStation||r.title);
-    if(seen.has(key))return false;seen.add(key);return true;
+  const seen = new Set();
+  routes = routes.filter(r=>{
+    const key = r.isDirect ? 'direct' : (r.alightStation || r.title);
+    if(seen.has(key)) return false;
+    seen.add(key);
+    return true;
   });
 
-  if(routes.length===0){showErr('ルートが見つかりませんでした。');btn.disabled=false;btn.textContent='最適ルートを検索する';return}
-  routes.sort((a,b)=>a.totalCost-b.totalCost);
+  if(routes.length === 0){showErr('ルートが見つかりませんでした。');btn.disabled=false;btn.textContent='最適ルートを検索する';return;}
+  routes.sort((a,b) => a.totalCost - b.totalCost);
+
   renderAll();
-  btn.disabled=false;btn.textContent='最適ルートを検索する';
+  btn.disabled=false; btn.textContent='最適ルートを検索する';
   document.getElementById('results').style.display='block';
   setTimeout(()=>document.getElementById('results').scrollIntoView({behavior:'smooth'}),100);
 }
 
 function renderAll(){
-  const minC=routes[0].totalCost;
-  const minT=Math.min(...routes.map(r=>r.totalTime));
+  const minC = routes[0].totalCost;
+  const minT = Math.min(...routes.map(r=>r.totalTime));
   document.getElementById('sum-row').innerHTML=`
     <div class="scard"><div class="sl">最安ルート</div><div class="sv">¥${minC.toLocaleString()}</div><div class="ss">${routes[0].isDirect?'直行':routes[0].alightStation||''}</div></div>
     <div class="scard"><div class="sl">最速ルート</div><div class="sv">${minT}分〜</div><div class="ss">${routes.find(r=>r.totalTime===minT).isDirect?'直行':routes.find(r=>r.totalTime===minT).alightStation||''}</div></div>
     <div class="scard"><div class="sl">比較数</div><div class="sv">${routes.length}件</div><div class="ss">ルート候補</div></div>`;
+
   showMap(0);
+
   document.getElementById('map-legend').innerHTML=`
     <div class="leg"><div class="leg-line" style="background:${STEP_COLORS.walk}"></div>徒歩</div>
     <div class="leg"><div class="leg-line" style="background:${STEP_COLORS.subway}"></div>地下鉄</div>
-    <div class="leg"><div class="leg-line" style="background:${STEP_COLORS.bus}"></div>バス</div>
     <div class="leg"><div class="leg-line" style="background:${STEP_COLORS.taxi}"></div>タクシー</div>`;
-  document.getElementById('result-list').innerHTML=routes.map((r,i)=>{
-    const isBest=i===0;const isFast=r.totalTime===minT&&i!==0;
-    const stepsHTML=r.steps.map(s=>`
+
+  document.getElementById('result-list').innerHTML = routes.map((r,i)=>{
+    const isBest = i===0;
+    const isFast = r.totalTime===minT && i!==0;
+    const stepsHTML = r.steps.map(s=>`
       <div class="flow-step" style="background:${s.color}18">
         <span class="step-icon">${s.icon}</span>
         <div class="step-body">
@@ -744,41 +722,47 @@ function renderAll(){
       <div class="flow-steps">${stepsHTML}</div>
     </div>`;
   }).join('');
-  const t=TAXI[reg];const winter=reg==='sapporo'&&document.getElementById('winter-check').checked;
+
+  const t = TAXI[reg];
+  const winter = reg==='sapporo' && document.getElementById('winter-check').checked;
   document.getElementById('disc-text').textContent=`※ ${t.name}地域タクシー料金（初乗り${t.start}円/${t.startKm}kmまで・以降${t.perM}mごと${t.perCost}円）${winter?'・冬季割増2割増適用':''}。地下鉄運賃は札幌市営地下鉄の区数制料金（乗り換え考慮）。所要時間・運賃は概算です。`;
 }
 
 function selRoute(i){
   showMap(i);
   document.querySelectorAll('.flow-card').forEach((el,j)=>{
-    el.classList.remove('sel');if(j===0)el.classList.add('best');if(j===i&&i!==0)el.classList.add('sel');
+    el.classList.remove('sel');
+    if(j===0) el.classList.add('best');
+    if(j===i && i!==0) el.classList.add('sel');
   });
 }
 
 function showMap(i){
-  renderers.forEach(r=>{try{if(r.setMap)r.setMap(null);else if(r.setOptions)r.setOptions({map:null})}catch(e){}});renderers=[];
-  if(!routes[i]||!gmap)return;
-  const bounds=new google.maps.LatLngBounds();
-  if(fromLatLng)bounds.extend(fromLatLng);
-  if(toLatLng)bounds.extend(toLatLng);
+  renderers.forEach(r=>{try{if(r.setMap)r.setMap(null);else if(r.setOptions)r.setOptions({map:null});}catch(e){}});
+  renderers=[];
+  if(!routes[i]||!gmap) return;
+  const bounds = new google.maps.LatLngBounds();
+  if(fromLatLng) bounds.extend(fromLatLng);
+  if(toLatLng) bounds.extend(toLatLng);
   (routes[i].mapSegments||[]).forEach(seg=>{
     if(seg.type==='straight'){
-      const line=new google.maps.Polyline({path:[seg.from,seg.to],strokeColor:seg.color,strokeWeight:4,strokeOpacity:0.85,map:gmap});
-      renderers.push(line);bounds.extend(seg.from);bounds.extend(seg.to);
-    }else if(seg.result){
-      const renderer=new google.maps.DirectionsRenderer({directions:seg.result,suppressMarkers:true,polylineOptions:{strokeColor:seg.color,strokeWeight:seg.strokeWeight||5,strokeOpacity:0.85}});
-      renderer.setMap(gmap);renderers.push(renderer);
-      const leg=seg.result.routes[0].legs[0];bounds.extend(leg.start_location);bounds.extend(leg.end_location);
+      const line = new google.maps.Polyline({path:[seg.from,seg.to],strokeColor:seg.color,strokeWeight:4,strokeOpacity:0.85,map:gmap});
+      renderers.push(line); bounds.extend(seg.from); bounds.extend(seg.to);
+    } else if(seg.result){
+      const renderer = new google.maps.DirectionsRenderer({directions:seg.result,suppressMarkers:true,polylineOptions:{strokeColor:seg.color,strokeWeight:seg.strokeWeight||5,strokeOpacity:0.85}});
+      renderer.setMap(gmap); renderers.push(renderer);
+      const leg = seg.result.routes[0].legs[0];
+      bounds.extend(leg.start_location); bounds.extend(leg.end_location);
     }
   });
   if(fromLatLng){const m=new google.maps.Marker({position:fromLatLng,map:gmap,label:{text:'出',color:'#fff',fontSize:'11px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#378ADD',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});renderers.push(m);}
   if(toLatLng){const m=new google.maps.Marker({position:toLatLng,map:gmap,label:{text:'着',color:'#fff',fontSize:'11px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#E24B4A',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});renderers.push(m);}
-  if(!bounds.isEmpty())gmap.fitBounds(bounds,{top:20,bottom:20,left:20,right:20});
+  if(!bounds.isEmpty()) gmap.fitBounds(bounds,{top:20,bottom:20,left:20,right:20});
 }
 
-function showErr(msg){const e=document.createElement('div');e.className='errmsg';e.textContent=msg;document.querySelector('.container').insertBefore(e,document.getElementById('results'));}
+function showErr(msg){ const e=document.createElement('div'); e.className='errmsg'; e.textContent=msg; document.querySelector('.container').insertBefore(e,document.getElementById('results')); }
 
-window.initMap=initMap;
+window.initMap = initMap;
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgF7d_zuAMKnxtEKUAFU89URmUV_1wJTQ&libraries=places,geometry&callback=initMap&language=ja" async defer></script>
 </body>
